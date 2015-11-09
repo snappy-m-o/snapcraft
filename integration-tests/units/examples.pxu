@@ -1,17 +1,11 @@
-id: snapcraft/examples/template
-plugin: resource
-command:
-  for example in $(ls ${PLAINBOX_PROVIDER_DATA}/examples); do
-    echo "name: $example\n\n"
-
 id: snapcraft/examples/{name}
 unit: template
 template-unit: job
-template-resource: snapcraft/examples/template
+template-resource: examples_resource
 plugin: shell
 command:
   set -e
-  example=${PLAINBOX_PROVIDER_DATA}/examples/{name}
-  cp -rT ${example//:} ${PLAINBOX_SESSION_SHARE}
-  cd ${PLAINBOX_SESSION_SHARE} && ${SNAPCRAFT}
-  rm -rf ${PLAINBOX_SESSION_SHARE}/*
+  example=$PLAINBOX_PROVIDER_DATA/examples/{name}
+  cp -rT ${example//:} $PLAINBOX_SESSION_SHARE
+  cd $PLAINBOX_SESSION_SHARE && $SNAPCRAFT
+  rm -rf $PLAINBOX_SESSION_SHARE/*
