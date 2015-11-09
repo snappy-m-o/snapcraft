@@ -3,7 +3,14 @@ id: normal
 _name: Tests for Snapcraft
 include: snapcraft/normal/.*
 
+id: snapcraft/examples/template
+plugin: resource
+command:
+  for example in $(ls ${PLAINBOX_PROVIDER_DATA}/examples); do
+    echo "name: $example\n\n"
+
 unit: test plan
 id: examples
 name: Test for building Snapcraft examples
 include: snapcraft/examples/.*
+bootstrap_jobs: snapcraft/examples/template
