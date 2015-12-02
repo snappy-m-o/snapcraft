@@ -217,3 +217,21 @@ class BuildTestCase(tests.TestCase):
         for file_ in common.SNAPCRAFT_FILES:
             self.assertFalse(
                 os.path.exists(os.path.join(plugin.builddir, file_)))
+
+    def test_build_ignores_snapcraft_files_in_source_subdir(self):
+        # Make the snapcraft dir a subdir of the source dir.
+        snapcraft_dir = os.path.join(self.path, 'snapcraft')
+        os.mkdir(snapcraft_dir)
+        os.chdir(snapcraft_dir)
+        options = MockOptions(source='../')
+        plugin = snapcraft.BasePlugin('test-part', options=options)
+
+        os.makedirs(plugin.partdir)
+        os.makedirs(os.path.join(plugin.partdir, 'src'))
+
+        plugin.builddir = os.path.join(plugin.partdir, 'build')
+
+        # Pull will make a symlink for the source dir in the snapcraft dir
+        # causing an infinite loop.
+        plugin.pull()
+        plugin.build()
