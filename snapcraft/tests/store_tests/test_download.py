@@ -41,7 +41,7 @@ class TestSearchPackage(store_tests.TestCase):
 
     def test_search_known_package(self):
         # We rely on a package that has been published for TEST_USER_EMAIL
-        pkg = self.cpi.search_package('femto', 'stable', 'amd64')
+        pkg = self.cpi.search_package('test-snap', 'stable', 'amd64')
         self.assertIn('download_url', pkg)
         self.assertIn('download_sha512', pkg)
 
@@ -69,7 +69,7 @@ class TestDownload(store_tests.TestCase):
         self.assertEqual('amd64', exc.arch)  # default value
 
     def test_download_works(self):
-        pkg_name = 'femto'
+        pkg_name = 'test-snap'
         self.download(pkg_name, 'stable', 'downloaded.snap')
         self.assertTrue(os.path.exists('downloaded.snap'))
         self.assertLog('''Getting details for {pkg_name}
@@ -78,7 +78,7 @@ Successfully downloaded {pkg_name} at downloaded.snap
 '''.format(pkg_name=pkg_name))
 
     def test_download_twice_reuse_existing(self):
-        pkg_name = 'femto'
+        pkg_name = 'test-snap'
         self.download(pkg_name, 'stable', 'downloaded.snap')
         self.assertTrue(os.path.exists('downloaded.snap'))
         self.assertLog('''Getting details for {pkg_name}
@@ -95,7 +95,7 @@ Already downloaded {pkg_name} at downloaded.snap
 '''.format(pkg_name=pkg_name))
 
     def test_redownload_on_mismatch(self):
-        pkg_name = 'femto'
+        pkg_name = 'test-snap'
         self.download(pkg_name, 'stable', 'downloaded.snap')
         self.assertTrue(os.path.exists('downloaded.snap'))
         self.assertLog('''Getting details for {pkg_name}

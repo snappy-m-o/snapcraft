@@ -22,7 +22,7 @@ class TestLoginLogout(store_tests.TestCase):
 
     def test_successful_login(self):
         self.addCleanup(self.logout)
-        res = self.login()
+        res = self.login(password='test correct password')
         self.assertTrue(res['success'])
         # Credentials have been saved
         self.assertTrue(os.path.exists(config.Config.save_path()))
@@ -40,7 +40,7 @@ class TestLoginLogout(store_tests.TestCase):
 
     def test_logout_clear_config(self):
         self.addCleanup(self.logout)
-        res = self.login()
+        res = self.login(password='test correct password')
         self.assertTrue(res['success'])
         res = self.logout()
         conf = config.Config()

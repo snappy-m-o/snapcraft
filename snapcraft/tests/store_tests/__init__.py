@@ -81,8 +81,7 @@ class TestCase(testtools.TestCase):
         # Use a test-local config
         test_config.isolate_for_config(self)
 
-        # Default to the staging environment
-        self.useFixture(fixture_setup.StagingStore())
+        self.useFixture(fixture_setup.FakeStore())
 
         # Capture logging
         self.logger = fixtures.LoggerFixture(level=logging.INFO)
@@ -97,14 +96,9 @@ class TestCase(testtools.TestCase):
         self.store = storeapi.SCAClient()
         self.addCleanup(self.store.close)
 
-    def login(self, email=None, password=None):
+    def login(self, email=None, password='test correct password'):
         email = email or os.getenv('TEST_USER_EMAIL',
                                    'u1test+snapcraft@canonical.com')
-        env_password = os.getenv('TEST_USER_PASSWORD', None)
-        if not env_password:
-            self.skipTest('No password provided for the test user.')
-        password = password or env_password
-
         # FIXME: Find a way to test one-time-passwords (otp)
         # -- vila 2016-04-11
         return self.store.login(email, password, one_time_password='')
