@@ -20,6 +20,14 @@ import os
 from launchpadlib import launchpad
 
 
+def add_series_target(task, series):
+    for related_task in task.related_tasks:
+        if related_task.target == xenial:
+            return related_task
+    else:
+        return task.bug.addTask(target=xenial)
+
+
 cachedir = os.path.join(os.getenv('HOME'), '.launchpadlib', 'cache')
 client = launchpad.Launchpad.login_with(
     'snapcraft scripts', 'production', cachedir, version='devel')
@@ -29,9 +37,12 @@ xenial = ubuntu.getSeries(name_or_version='xenial')
 yakkety = ubuntu.getSeries(name_or_version='yakkety')
 
 snapcraft = client.projects['snapcraft']
-milestone = snapcraft.getMilestone(name='2.12')
-tasks = snapcraft.searchTasks(milestone=milestone)
+snapcraft_milestone = snapcraft.getMilestone(name='2.12')
+xenial_updates_milestone = ubuntu.getMilestone(name='xenial-updates')
+tasks = snapcraft.searchTasks(milestone=snapcraft_milestone)
 
 for task in tasks:
-    task.bug.addTask(target=xenial)
-    task.bug.addTask(target=yakkety)
+    xenial_task = add_series_target(task, xenial)
+    xenial_task.milestone = xenial_updates_milestone
+    xenial_task.lp_save()
+    add_series_target(task, yakkety)
