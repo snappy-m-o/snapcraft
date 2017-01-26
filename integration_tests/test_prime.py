@@ -1,6 +1,6 @@
 # -*- Mode:Python; indent-tabs-mode:nil; tab-width:4 -*-
 #
-# Copyright (C) 2015, 2016 Canonical Ltd
+# Copyright (C) 2015, 2016, 2017 Canonical Ltd
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
@@ -32,29 +32,25 @@ class PrimeTestCase(integration_tests.TestCase):
         self.deb_arch = snapcraft.ProjectOptions().deb_arch
 
     def test_prime_includes_stage_fileset(self):
-        project_dir = 'prime-from-stage'
-
-        self.run_snapcraft('prime', project_dir)
+        self.run_snapcraft('prime', 'prime-from-stage')
         self.assertThat(
-            os.path.join(project_dir, 'prime', 'without-a'),
+            os.path.join('prime', 'without-a'),
             FileExists())
         self.assertThat(
-            os.path.join(project_dir, 'prime', 'without-b'),
+            os.path.join('prime', 'without-b'),
             Not(FileExists()))
         self.assertThat(
-            os.path.join(project_dir, 'prime', 'without-c'),
+            os.path.join('prime', 'without-c'),
             FileExists())
 
     def test_prime_includes_stage_excludes_fileset(self):
-        project_dir = 'prime-from-stage'
-
-        self.run_snapcraft('prime', project_dir)
+        self.run_snapcraft('prime', 'prime-from-stage')
         self.assertThat(
-            os.path.join(project_dir, 'prime', 'with-a'),
+            os.path.join('prime', 'with-a'),
             Not(FileExists()))
         self.assertThat(
-            os.path.join(project_dir, 'prime', 'with-b'),
+            os.path.join('prime', 'with-b'),
             FileExists())
         self.assertThat(
-            os.path.join(project_dir, 'prime', 'with-c'),
+            os.path.join('prime', 'with-c'),
             FileExists())
